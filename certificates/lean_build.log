@@ -1,0 +1,46 @@
+ℹ [14/18] Built Q8Genus2Anomaly.Audit (241ms)
+info: Q8Genus2Anomaly/Audit.lean:3:0: 'Q8Genus2Anomaly.dic_assoc' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:4:0: 'Q8Genus2Anomaly.dic_one_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:5:0: 'Q8Genus2Anomaly.dic_mul_one' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:6:0: 'Q8Genus2Anomaly.dic_mul_inv' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:7:0: 'Q8Genus2Anomaly.dic_inv_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:8:0: 'Q8Genus2Anomaly.q8_group' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:9:0: 'Q8Genus2Anomaly.x_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:10:0: 'Q8Genus2Anomaly.y_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:11:0: 'Q8Genus2Anomaly.q_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:12:0: 'Q8Genus2Anomaly.even_normalized' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:13:0: 'Q8Genus2Anomaly.even_cocycle' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:14:0: 'Q8Genus2Anomaly.q8_cocycle_4096' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:15:0: 'Q8Genus2Anomaly.q8_cocycle_all' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:16:0: 'Q8Genus2Anomaly.odd_normalized' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:17:0: 'Q8Genus2Anomaly.odd_cocycle' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:18:0: 'Q8Genus2Anomaly.D_cycle' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:19:0: 'Q8Genus2Anomaly.D_even' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:20:0: 'Q8Genus2Anomaly.D_odd' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:21:0: 'Q8Genus2Anomaly.D_even_nontrivial' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:22:0: 'Q8Genus2Anomaly.D_odd_nontrivial' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:23:0: 'Q8Genus2Anomaly.D2_certificate' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:24:0: 'Q8Genus2Anomaly.five_twists_preserve' does not depend on any axioms
+info: Q8Genus2Anomaly/Audit.lean:25:0: 'Q8Genus2Anomaly.phi_preserves_R' does not depend on any axioms
+info: Q8Genus2Anomaly/Audit.lean:26:0: 'Q8Genus2Anomaly.phi_preserves_rho' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:27:0: 'Q8Genus2Anomaly.free_filler_certificate' does not depend on any axioms
+info: Q8Genus2Anomaly/Audit.lean:28:0: 'Q8Genus2Anomaly.ZA_from_free_filler' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:29:0: 'Q8Genus2Anomaly.ZA_cycle' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:30:0: 'Q8Genus2Anomaly.ZA_phase' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:31:0: 'Q8Genus2Anomaly.q8_torus_cardinalities' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:32:0: 'Q8Genus2Anomaly.q8_torus_1920' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:33:0: 'Q8Genus2Anomaly.q8_torus_exhaustive' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:34:0: 'Q8Genus2Anomaly.q8_torus_blind' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:35:0: 'Q8Genus2Anomaly.halfDifference_lift' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:36:0: 'Q8Genus2Anomaly.ta4_preserves_R' does not depend on any axioms
+info: Q8Genus2Anomaly/Audit.lean:37:0: 'Q8Genus2Anomaly.ta4_preserves_rho' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:38:0: 'Q8Genus2Anomaly.c4_embedding_mul' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:39:0: 'Q8Genus2Anomaly.c4_embedding_injective' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:40:0: 'Q8Genus2Anomaly.ta4_cyclic_certificate' does not depend on any axioms
+info: Q8Genus2Anomaly/Audit.lean:41:0: 'Q8Genus2Anomaly.odd_torus_cycle' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:42:0: 'Q8Genus2Anomaly.odd_torus_phase' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:43:0: 'Q8Genus2Anomaly.odd_torus_counterexample' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:44:0: 'Q8Genus2Anomaly.dic3_torus_counterexample' depends on axioms: [propext, Quot.sound]
+info: Q8Genus2Anomaly/Audit.lean:45:0: 'Q8Genus2Anomaly.dic3_ta4_bar_lift' depends on axioms: [propext, Quot.sound]
+✔ [16/18] Built Q8Genus2Anomaly (153ms)
+Build completed successfully (18 jobs).

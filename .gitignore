@@ -12,6 +12,13 @@ lean/.lake/packages/
 # Local downloaded papers (check arXiv licenses separately; do not redistribute)
 references/
 
+# LaTeX build intermediates
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+
 # OS / editor noise
 .DS_Store
 *.swp

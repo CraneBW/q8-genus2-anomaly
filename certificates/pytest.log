@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-9.2.0, pluggy-1.7.0 -- /home/ran/问题/q8-genus2-anomaly/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/ran/问题/q8-genus2-anomaly
+collecting ... collected 10 items
+
+tests/test_verification.py::test_q8_table_and_normalized_order_eight_cocycle PASSED [ 10%]
+tests/test_verification.py::test_cayley_tree_chain_and_general_conjugation_prism PASSED [ 20%]
+tests/test_verification.py::test_mapping_tori_agree_after_orientation_calibration[2-18-6744-3] PASSED [ 30%]
+tests/test_verification.py::test_mapping_tori_agree_after_orientation_calibration[3-3-2196-3] PASSED [ 40%]
+tests/test_verification.py::test_mapping_tori_agree_after_orientation_calibration[4-20-8280-5] PASSED [ 50%]
+tests/test_verification.py::test_mapping_tori_agree_after_orientation_calibration[6-22-9816-7] PASSED [ 60%]
+tests/test_verification.py::test_q8_raw_cut_flatness_and_smith_replay PASSED [ 70%]
+tests/test_verification.py::test_non_real_lens_and_spherical_calibration PASSED [ 80%]
+tests/test_verification.py::test_independent_w8_comparison_is_an_explicit_coboundary PASSED [ 90%]
+tests/test_verification.py::test_q8_full_torus_regression_and_all_geometric_stabilizers PASSED [100%]
+
+============================= 10 passed in 34.59s ==============================

@@ -1,0 +1,340 @@
+\documentclass[11pt]{amsart}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,booktabs}
+\usepackage[colorlinks,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\U}{\mathrm{U}}
+\newcommand{\SU}{\mathrm{SU}}
+\newcommand{\SL}{\mathrm{SL}}
+\newcommand{\Pin}{\mathrm{Pin}}
+\newcommand{\Dic}{\mathrm{Dic}}
+\newcommand{\Mod}{\mathrm{Mod}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Hom}{\mathrm{Hom}}
+
+\title[Unpunctured Genus-2 Anomaly Detection for Finite Subgroups of $\SU(2)$]{Unpunctured Genus-2 Anomaly Detection for $Q_8$, Dicyclic Groups, and All Finite Subgroups of $\SU(2)$}
+\author{Crane}
+\date{November 26, 2026}
+
+\begin{document}
+
+\begin{abstract}
+We determine the exact minimum genus $g_{\min}(G)$ of a closed, oriented, unpunctured surface $\Sigma_g$ whose mapping-torus flat $G$-bundles detect the full $(1+1)$d bosonic 't~Hooft anomaly group $H^3(BG;\U(1))$ for every non-trivial finite subgroup $G \le \SU(2)$.
+For the dicyclic group $\Dic_N$ of order $4N$ ($N \ge 2$), the genus-1 detection kernel $K_1(\Dic_N)$ is trivial for odd $N$ and equals the unique order-$2$ subgroup $\Z/2\Z$ for even $N$.
+For every even $N \ge 2$, we construct a single explicit unpunctured genus-$2$ mapping torus $M_\phi$ ($\phi = T_a^N T_w^2 T_c^2$) carrying a flat $\Dic_N$-bundle whose pushforward fundamental class equals $N+1 \bmod 4N$ in $H_3(B\Dic_N;\Z) \cong \Z/(4N)\Z$.
+Because $\gcd(N+1,4N)=1$, this single flat bundle distinguishes all $4N$ anomaly classes simultaneously, establishing $g_{\min}(\Dic_N)=2$ for even $N$ (in particular $g_{\min}(Q_8)=2$, with residue $3 \bmod 8$ and order-$2$ phase $-1$).
+More generally, for every non-trivial finite $G \le \SU(2)$, $g_{\min}(G)=1$ if and only if a $2$-Sylow subgroup of $G$ is cyclic ($C_n$ and $\Dic_N$ for odd $N$), and $g_{\min}(G)=2$ if and only if a $2$-Sylow subgroup is generalized quaternion ($\Dic_N$ for even $N$, $2T$, $2O$, and $2I$).
+The odd-$N$ genus-$1$ witness ($T_a^4$ on $\langle s\rangle \cong C_4$, smallest instance $\Dic_3$) refines the literal all-$N$ statements of Propositions~1.1 and~3.3 of Yu (\emph{Phys.\ Rev.\ D} \textbf{105}, 106007).
+All core examples ($N=2,3,4,6$), orientation calibrations, and exhaustive $Q_8$ genus-$1$ checks are certified by two independent Python implementations (algebraic bar $3$-cycles and explicit closed oriented $3$-manifold triangulations) and a standalone zero-\texttt{sorry} Lean~4.36.0 formalization.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+In $(1+1)$-dimensional bosonic quantum field theories with finite global symmetry $G$, 't~Hooft anomalies are classified by $H^3(BG;\U(1))$.
+Following~\cite{Yu2022}, one probes an anomaly $\alpha \in H^3(BG;\U(1))$ via topological phases arising from mapping cylinders (equivalently, closed mapping tori) equipped with flat $G$-bundles.
+When restricted to genus-$1$ surfaces (tori), this method completely detects anomalies of all finite abelian groups, yet fails for certain non-abelian symmetries---prototypically the quaternion group $Q_8 = \Dic_2$, whose unique order-$2$ class $\alpha_4 \in H^3(BQ_8;\U(1)) \cong \Z/8\Z$ is invisible to genus-$1$ data~\cite{Yu2022}.
+
+A natural question left open by the genus-$1$ analysis is the \emph{minimum unpunctured genus} required to detect the blind-spot anomaly of $Q_8$, and more generally of dicyclic groups $\Dic_N$ and all finite subgroups $G \le \SU(2)$ (ADE subgroups).
+In this work we settle this completely.
+
+\begin{theorem}[Complete ADE Classification]\label{thm:ADE}
+Let $G \le \SU(2)$ be a non-trivial finite subgroup, and let $K_g(G) \le H^3(BG;\U(1))$ denote the joint kernel of single-bundle evaluation $\alpha \mapsto \langle \tilde{\rho}^*\alpha, [M_\phi]\rangle \in \U(1)$ over all closed, oriented, unpunctured genus-$g$ mapping tori $M_\phi$ and all flat $G$-bundles $\tilde{\rho}\colon \pi_1(M_\phi)\to G$. Set $g_{\min}(G) := \min\{g \ge 0 : K_g(G) = 0\}$. Then:
+\begin{enumerate}
+    \item If a $2$-Sylow subgroup of $G$ is cyclic ($G \cong C_n$ with $n \ge 2$, or $G \cong \Dic_N$ with $N \ge 3$ odd), then $K_1(G)=0$ and $g_{\min}(G)=1$.
+    \item If a $2$-Sylow subgroup of $G$ is generalized quaternion ($G \cong \Dic_N$ with $N \ge 2$ even, or $G \in \{2T, 2O, 2I\}$), then $K_1(G) \cong \Z/2\Z$ (the unique order-$2$ subgroup of $H^3(BG;\U(1))$), $K_2(G)=0$, and $g_{\min}(G)=2$.
+\end{enumerate}
+In particular, unpunctured genus-$2$ mapping tori detect $H^3(BG;\U(1))$ completely for every finite subgroup $G \le \SU(2)$, and $K_g(G)=0$ for all $g \ge g_{\min}(G)$.
+\end{theorem}
+
+The heart of Theorem~\ref{thm:ADE} is an explicit genus-$2$ witness for even dicyclic groups that achieves something stronger than order-$2$ parity detection: a \emph{single} flat bundle generates the entire cyclic homology group $H_3(B\Dic_N;\Z) \cong \Z/(4N)\Z$.
+
+\begin{theorem}[Exact Single-Bundle Genus-$2$ Witness for Even $\Dic_N$]\label{thm:even-dic}
+Let $N \ge 2$ be even, and let $\Dic_N = \langle r,s \mid r^{2N}=1,\, s^2=r^N,\, srs^{-1}=r^{-1}\rangle$.
+Let $\Sigma_2$ have standard presentation $\pi_1(\Sigma_2)=\langle a,b,c,d \mid [a,b][c,d]=1\rangle$, $w=ba^{-1}b^{-1}c$, and disjoint Dehn twists $T_1=T_a$, $T_3=T_w$, $T_5=T_c$.
+Consider the mapping torus $M_\phi$ of $\phi = T_1^N T_3^2 T_5^2$ with flat $\Dic_N$-bundle $\tilde{\rho}\colon \pi_1(M_\phi)\to \Dic_N$ determined by $(\rho(a),\rho(b),\rho(c),\rho(d))=(r,1,s,1)$ and trivial time holonomy $h=1$.
+Then:
+\begin{enumerate}
+    \item $H_1(M_\phi;\Z) \cong \Z^3 \oplus \Z/2\Z \oplus \Z/(2N+2)\Z$.
+    \item With the fiber-then-positive-time orientation and the Tomoda--Zvengrowski $4$-periodic resolution generator $e_3$ of $H_3(B\Dic_N;\Z) \cong \Z/(4N)\Z$,
+    \[
+        \tilde{\rho}_*[M_\phi] \equiv N + 1 \pmod{4N}.
+    \]
+    \item Since $\gcd(N+1,4N)=1$, the single bundle $(M_\phi,\tilde{\rho})$ distinguishes all $4N$ classes in $H^3(B\Dic_N;\U(1))$, and in particular evaluates the unique order-$2$ class $\alpha_{2N}$ to $-1$.
+\end{enumerate}
+\end{theorem}
+
+\section{Detection Kernels, Conventions, and Group Cohomology}
+
+\subsection{Unpunctured Genus-$g$ Detection Kernel}
+Let $\Sigma_g$ be a closed oriented surface of genus $g$. For an orientation-preserving diffeomorphism $\phi\colon \Sigma_g \to \Sigma_g$, its mapping torus is
+\[
+    M_\phi := (\Sigma_g \times [0,1]) \big/ \big((p,0) \sim (\phi(p),1)\big),
+\]
+oriented by the product orientation (fiber $\Sigma_g$ followed by positive $[0,1]$-direction).
+Choosing a basepoint and a representative lift $\phi_*\in \Aut^+(\pi_1(\Sigma_g))$ of $[\phi]\in \Mod(\Sigma_g) \hookrightarrow \Out^+(\pi_1(\Sigma_g))$ gives the HNN presentation
+\[
+    \pi_1(M_\phi) = \bigl\langle \pi_1(\Sigma_g),\, t \;\big|\; t\gamma t^{-1} = \phi_*(\gamma) \;\;\forall \gamma\in \pi_1(\Sigma_g)\bigr\rangle.
+\]
+A flat $G$-bundle on $M_\phi$ is a homomorphism $\tilde{\rho}\colon \pi_1(M_\phi)\to G$, equivalently a pair $(\rho, h)$ with $\rho\in \Hom(\pi_1(\Sigma_g),G)$ and $h=\tilde{\rho}(t)\in G$ satisfying $\rho(\phi_*(\gamma)) = h\rho(\gamma)h^{-1}$.
+Replacing the lift $\phi_*$ by $\Inn(\eta)\circ\phi_*$ (with $\Inn(\eta)(\gamma)=\eta\gamma\eta^{-1}$) replaces $(t,h)$ by $(\eta t, \rho(\eta)h)$ and defines the same isomorphism class of flat bundle on $M_\phi$.
+
+\begin{definition}
+For $g \ge 0$, the \emph{unpunctured genus-$g$ detection kernel} is
+\[
+    K_g(G) := \bigcap_{\phi\in \Mod(\Sigma_g)} \bigcap_{\tilde{\rho}\colon \pi_1(M_\phi)\to G} \ker\Bigl(\alpha \longmapsto \langle \tilde{\rho}^*\alpha, [M_\phi]\rangle \in \U(1)\Bigr) \;\le\; H^3(BG;\U(1)).
+\]
+\end{definition}
+Notice that we evaluate on \emph{individual} flat bundles rather than summing over bundles (as in a Dijkgraaf--Witten partition function), since summing over flat bundles can cancel individual phases.
+For $g=0$, $\Sigma_0 = S^2$ is simply connected, so $\pi_1(M_\phi)\cong \Z$ and $\tilde{\rho}$ factors through $S^1$; hence $K_0(G) = H^3(BG;\U(1))$ and $g_{\min}(G) \ge 1$ for every non-trivial finite group $G$ (while $g_{\min}(1)=0$).
+
+\subsection{Cohomology and Explicit Mod-$2$ $3$-Cocycles of $\Dic_N$}
+Every finite subgroup $G \le \SU(2)$ acts freely on $S^3$. The Gysin sequence of the sphere bundle $S^3 \to S^3/G \to BG$ gives $H_3(BG;\Z) \cong H^4(BG;\Z) \cong H^3(BG;\U(1)) \cong \Z/|G|\Z$, with compatible generators given by the pullback of $c_2 \in H^4(B\SU(2);\Z)$~\cite{EpaGanter2017}.
+Consequently, for any subgroup $H \le G$, restriction $H^3(BG;\U(1)) \to H^3(BH;\U(1))$ is surjective and identifies with reduction $\Z/|G|\Z \twoheadrightarrow \Z/|H|\Z$.
+When $|G|$ is even, $H^3(BG;\U(1))$ has a unique order-$2$ element $\alpha_{|G|/2}$, which pairs with $k \in H_3(BG;\Z) \cong \Z/|G|\Z$ as $(-1)^k$.
+
+Write elements of $\Dic_N$ as $(p,q) = r^p s^q$ with $0 \le p < 2N$, $q \in \{0,1\}$, and central involution $z = r^N = s^2$:
+\[
+    (p,q)(u,v) = \bigl(p + (-1)^q u + Nqv \bmod 2N,\; q \oplus v\bigr).
+\]
+
+\begin{proposition}[Normalized Mod-$2$ $3$-Cocycles and $4$-Term Certificate]\label{prop:cocycles}
+\begin{enumerate}
+    \item For even $N \ge 2$, the maps $x(p,q)=p\bmod 2$ and $y(p,q)=q$ are homomorphisms $\Dic_N \to \Z/2\Z$, and the cup product
+    \[
+        \omega_{\mathrm{even}}(g,h,k) = x(g)x(h)y(k) \bmod 2
+    \]
+    is a normalized $\Z/2\Z$-valued $3$-cocycle representing $\alpha_{2N}$ via $1 \mapsto -1$.
+    \item For odd $N \ge 3$, $q(p,q) = 2p + q \bmod 4$ is a homomorphism $\Dic_N \to \Z/4\Z$, and
+    \[
+        \omega_{\mathrm{odd}}(g,h,k) = (q(g)\bmod 2)\left\lfloor \frac{\hat{q}(h)+\hat{q}(k)}{4}\right\rfloor \bmod 2 \qquad (\hat{q}\in\{0,1,2,3\})
+    \]
+    is a normalized $\Z/2\Z$-valued $3$-cocycle representing $\alpha_{2N}$.
+    \item For every $N \ge 2$, the integral normalized bar $3$-chain
+    \[
+        D_N = \sum_{j=1}^{N-1}[r\mid r^j\mid r] - [r\mid s\mid s] - [rs\mid rs\mid r] - [rs\mid r\mid s]
+    \]
+    satisfies $\partial D_N = 0$ over $\Z$, and evaluates to $\omega_{\mathrm{even}}(D_N) \equiv 1 \pmod 2$ (for even $N$) and $\omega_{\mathrm{odd}}(D_N) \equiv 1 \pmod 2$ (for odd $N$).
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+Cocycle closure of $\omega_{\mathrm{even}} = x \smile x \smile y$ and $\omega_{\mathrm{odd}} = (q\bmod 2) \smile \beta_4(q)$ is immediate (and machine-verified for all $N$ in \texttt{Cocycle.lean}).
+In the normalized bar boundary $\partial[g_1\mid g_2\mid g_3]=[g_2\mid g_3]-[g_1g_2\mid g_3]+[g_1\mid g_2g_3]-[g_1\mid g_2]$, the first sum telescopes to $[r\mid z]-[z\mid r]$, while the three remaining terms cancel $[r\mid z]-[z\mid r]$ and each other using $s^2=(rs)^2=z$ and $rsr=s$.
+For even $N$, only the last term $-[rs\mid r\mid s]$ contributes $1\bmod 2$ to $\omega_{\mathrm{even}}$. For odd $N$, one has $\hat{q}(r)=2$, $\hat{q}(s)=1$, and $\hat{q}(rs)=3$, so $(q(g)\bmod 2)=1$ only for $g=rs$, where $\omega_{\mathrm{odd}}(rs,rs,r)=1\cdot\lfloor(3+2)/4\rfloor=1$ and $\omega_{\mathrm{odd}}(rs,r,s)=1\cdot\lfloor(2+1)/4\rfloor=0$; thus only the third term contributes, again giving $-1\equiv 1\pmod 2$.
+Because $\partial D_N = 0$ over $\Z$, neither cocycle is a coboundary over $\U(1)$; since $H^3(B\Dic_N;\U(1))\cong\Z/(4N)\Z$ has a unique element of order $2$, each represents $\alpha_{2N}$.
+\end{proof}
+
+\section{The Genus-One Detection Kernel for $\Dic_N$}
+
+\begin{proposition}[Genus-$1$ Kernel for $\Dic_N$]\label{prop:genus1}
+Let $N \ge 2$.
+\begin{enumerate}
+    \item If $N$ is odd, then $K_1(\Dic_N)=0$ and $g_{\min}(\Dic_N)=1$. Explicitly, the genus-$1$ mapping torus of $T_a^4\colon (a,b)\mapsto (a,ba^4)$ with $(\rho(a),\rho(b);h)=(s,1;1)$ evaluates $\alpha_{2N}$ to $-1$.
+    \item If $N$ is even, then $K_1(\Dic_N) = \{0, 2N\} \cong \Z/2\Z$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+For any cyclic subgroup $C_m = \langle g\rangle \le \Dic_N$, the genus-$1$ mapping torus $M_{T_a^m}$ with $(\rho(a),\rho(b);h)=(g,1;1)$ is a flat bundle factoring through the lens space $L(m,1)$ and detects $H^3(BC_m;\U(1))\cong\Z/m\Z$ faithfully~\cite{Yu2022}.
+For $\langle r\rangle \cong C_{2N}$, this detects all classes modulo $2N$, so $|K_1(\Dic_N)| \le 2$ for every $N \ge 2$.
+
+If $N$ is odd, $\langle s\rangle \cong C_4$ has odd index $N$ in $\Dic_N$, so $\alpha_{2N}|_{\langle s\rangle} = 2\bmod 4 \neq 0$, and $M_{T_a^4}$ with $(s,1;1)$ has normalized bar $3$-cycle $\sum_{j=1}^3 [s\mid s^j\mid s]$ on which $\omega_{\mathrm{odd}}$ evaluates to $1\pmod 2$ (only $j=3$ triggers the carry $\lfloor(3+1)/4\rfloor=1$), yielding phase $-1$. Thus $K_1(\Dic_N)=0$.
+
+Now let $N$ be even, and let $(M_\gamma,\tilde{\rho})$ be any genus-$1$ mapping torus with flat $\Dic_N$-bundle.
+The fiber image $\rho(\pi_1(T^2))$ is an abelian subgroup of $\Dic_N \le \SU(2)$, hence cyclic.
+By Lemma~\ref{lem:wang} (Appendix~\ref{app:wang}), for any integer lift $X\in H^1(T^2;\Z)$ of $u|_{T^2} = (\tilde{\rho}^*x)|_{T^2}$,
+\[
+    \langle (\tilde{\rho}^*x)^2 (\tilde{\rho}^*y), [M_\gamma] \rangle \equiv \left\langle \left(\frac{\gamma^* X - X}{2}\bmod 2\right) \smile (\tilde{\rho}^*y)|_{T^2},\; [T^2]\right\rangle \pmod 2.
+\]
+If $\rho(\pi_1(T^2)) \le \langle r\rangle$, then $(\tilde{\rho}^*y)|_{T^2} = 0$, so the pairing is $0$.
+Otherwise, $\rho(\pi_1(T^2)) = \langle u\rangle \cong C_4$ for some reflection $u = r^p s$.
+Write $\rho(a) = u^{m_1}$, $\rho(b) = u^{m_2}$ with $m = (m_1,m_2) \in \Z^2$.
+If $p$ is even, then $x(u)=0$, so $X=0$ lifts $u|_{T^2}$ and the pairing is $0$.
+If $p$ is odd, then $x(u)=1$ and $y(u)=1$, so $m$ itself gives an integer lift $X = m_1 a^* + m_2 b^*$ of $u|_{T^2}$, while $(\tilde{\rho}^*y)|_{T^2} = (m_1 a^* + m_2 b^*) \bmod 2$.
+Any conjugating element $h \in N_{\Dic_N}(\langle u\rangle) = \langle u, r^{N/2}\rangle \cong Q_8$ acts on $\langle u\rangle$ by $u \mapsto u^{\pm 1}$, so $\gamma^* m \equiv \pm m \pmod 4$.
+In both cases $\gamma^* m - m$ is either $0 \pmod 4$ (so $(\gamma^*X-X)/2 \equiv 0\pmod 2$) or $-2m \pmod 4$ (so $(\gamma^*X-X)/2 \equiv m \equiv (\tilde{\rho}^*y)|_{T^2} \pmod 2$).
+Because the cup square of any class in $H^1(T^2;\Z/2\Z)$ vanishes on $[T^2]$, the pairing is $0 \bmod 2$ in all cases.
+Thus $\alpha_{2N}\in K_1(\Dic_N)$, so $K_1(\Dic_N)=\{0,2N\}\cong\Z/2\Z$.
+\end{proof}
+
+\section{Explicit Genus-Two Witness and Exact Group-Ring Proof of $(N+1) \bmod 4N$}
+
+\subsection{Five-Chain Dehn Twists and the Witness Bundle}
+On $\Sigma_2$ with $\pi_1(\Sigma_2)=\langle a,b,c,d \mid R=1\rangle$, $R=[a,b][c,d]$ and $w=ba^{-1}b^{-1}c$ (so $R = awdc^{-1}d^{-1}$), the five standard Lickorish--Humphries Dehn twists along the $5$-chain $(a,b,w,d,c)$ lift to free-group automorphisms of $F_4$ fixing $R$ identically (unlisted generators fixed):
+\begin{align*}
+    T_1=T_a&: b\mapsto ba, & T_2=T_b&: a\mapsto ab^{-1}, \\
+    T_3=T_w&: b\mapsto w^{-1}b,\; c\mapsto w^{-1}cw,\; d\mapsto dw, & T_4=T_d&: c\mapsto cd^{-1}, & T_5=T_c&: d\mapsto dc.
+\end{align*}
+The curves $a,w,c$ are mutually disjoint, cutting $\Sigma_2$ into two pairs of pants, and $T_1,T_3,T_5$ commute strictly in $F_4$.
+
+For even $N \ge 2$, set $\phi = T_1^N T_3^2 T_5^2$, $(\rho(a),\rho(b),\rho(c),\rho(d)) = (r,1,s,1)$, and $h=1$.
+Then $\phi$ acts on $F_4$ by
+\[
+    \phi(a)=a,\qquad \phi(b)=w^{-2}ba^N,\qquad \phi(c)=w^{-2}cw^2,\qquad \phi(d)=dc^2w^2.
+\]
+Writing $v := \rho(w) = r^{-1}s$, we have $v^2 = (r^{-1}s)^2 = z = r^N = s^2$, which is central of order $2$.
+Hence $\rho(\phi(b)) = z^{-1}\cdot 1\cdot z = 1$, $\rho(\phi(c)) = z^{-1}sz = s$, and $\rho(\phi(d)) = 1\cdot z\cdot z = 1$, confirming $\rho\circ\phi = \rho$ strictly with $h=1$.
+
+On $H_1(\Sigma_2;\Z)$, $w \mapsto -a+c$, so $\phi_*$ fixes $a,c$ and maps
+\[
+    b \longmapsto b + (N+2)a - 2c, \qquad d \longmapsto d - 2a + 4c.
+\]
+The $2\times 2$ nontrivial block of $\phi_* - I$ is $\bigl(\begin{smallmatrix} N+2 & -2 \\ -2 & 4 \end{smallmatrix}\bigr)$, whose greatest common divisor of entries is $2$ and whose determinant is $4(N+2)-4 = 4N+4 = 2(2N+2)$.
+By the Wang exact sequence, $H_1(M_\phi;\Z) \cong \Z^3 \oplus \Z/2\Z \oplus \Z/(2N+2)\Z$.
+Furthermore, taking the integer lift $X = a^*$ of $(\tilde{\rho}^*x)|_{\Sigma_2}$ gives $(\phi^*X - X)/2 = \frac{N+2}{2}b^* - d^*$, whose mod-$2$ cup product with $(\tilde{\rho}^*y)|_{\Sigma_2} = c^*$ evaluates to $\langle d^*\smile c^*, [\Sigma_2]\rangle \equiv 1 \pmod 2$. This already proves $\langle \tilde{\rho}^*\alpha_{2N}, [M_\phi]\rangle = -1$.
+
+\subsection{Proof of Theorem~\ref{thm:even-dic}: Exact Residue $(N+1) \bmod 4N$}
+We now upgrade the mod-$2$ parity calculation to an exact group-ring computation in the Tomoda--Zvengrowski $4$-periodic free $\Z[\Dic_N]$-resolution $P_\bullet \to \Z$~\cite[Props.~3.2--3.3]{TomodaZvengrowski2008}.
+With left $\Z[\Dic_N]$-module conventions, $P_0 = \Z G\cdot e_0$, $P_1 = \Z G\cdot e_r \oplus \Z G\cdot e_s$, $P_2 = \Z G\cdot A \oplus \Z G\cdot B$ (corresponding to the two relators $r^N s^{-2}$ and $rsrs^{-1}$), and $P_3 = \Z G\cdot e_3$, with differentials
+\begin{align*}
+    d_1(e_r) &= r - 1, & d_1(e_s) &= s - 1, \\
+    d_2(A) &= \Bigl(\sum_{j=0}^{N-1} r^j\Bigr)e_r - (s+1)e_s, & d_2(B) &= (1+rs)e_r + (r-1)e_s, \\
+    d_3(e_3) &= (r-1)A + (1-rs)B, & d_4(e_4) &= \Bigl(\sum_{g\in \Dic_N} g\Bigr)e_3.
+\end{align*}
+Let $J := \sum_{j=1}^{N} r^{-j} \in \Z[\Dic_N]$.
+Then $(r-1)J = 1 - r^{-N} = 1 - z$, and using $sr = r^{-1}s$ and $s^2 = z = r^N$,
+\[
+    sJrs = s\Bigl(\sum_{j=0}^{N-1} r^{-j}\Bigr)s = s^2\sum_{j=0}^{N-1} r^j = \sum_{j=0}^{N-1} r^{N+j} = \sum_{k=1}^{N} r^{-k} = J.
+\]
+
+Consider the standard cellular model of $M_\phi$ with one $0$-cell, five $1$-cells $(a,b,c,d,t)$, five $2$-cells (the fiber cell $\sigma_R$ attached along $R=[a,b][c,d]$ and four time squares $\tau_\gamma$ attached along $t\gamma t^{-1}\phi(\gamma)^{-1}$ for $\gamma\in\{a,b,c,d\}$), and one oriented $3$-cell $\Omega$ (fiber followed by positive $t$).
+We construct a $\Z G$-equivariant chain map $\Phi_\bullet\colon C_\bullet(\widetilde{M}_\phi) \to P_\bullet$ lifting $\tilde{\rho}$:
+\begin{itemize}
+    \item On $1$-cells: $\Phi_1(a)=e_r$, $\Phi_1(c)=e_s$, and $\Phi_1(b)=\Phi_1(d)=\Phi_1(t)=0$.
+    \item On $2$-cells: the fiber boundary $\tilde{\rho}_*(R)=[r,1][s,1]$ cancels freely, so $\Phi_2(\sigma_R)=0$.
+    Since $b,d,t \mapsto 1$, the attaching words of the time squares $\tau_b$ and $\tau_d$ reduce under $\tilde{\rho}$ to $v^{-2}r^N$ and $s^2 v^2$, respectively. Define
+    \[
+        E_b := z A + z r^{-1} B, \qquad E_d := -(s+z)A + (J - z r^{-1})B.
+    \]
+    Direct Fox-derivative expansion in $\Z[\Dic_N]$ confirms $d_2(E_b) = \operatorname{Fox}(v^{-2}r^N)$ and $d_2(E_d) = \operatorname{Fox}(s^2 v^2)$, so setting $\Phi_2(\tau_b) = E_b$ and $\Phi_2(\tau_d) = E_d$ (together with any lifts $\Phi_2(\tau_a), \Phi_2(\tau_c)$ filling the trivialized boundaries of $\tau_a, \tau_c$, which exist by exactness of $P_\bullet$) defines a valid $\Z[\Dic_N]$-equivariant chain map on the $2$-skeleton.
+\end{itemize}
+Finally, the boundary of the oriented $3$-cell $\Omega$ in the cellular chain complex of $\widetilde{M}_\phi$ is
+\[
+    \partial_3(\Omega) = (t-1)\sigma_R + \sum_{\gamma\in\{a,b,c,d\}} \frac{\partial R}{\partial \gamma}\,\tau_\gamma.
+\]
+Under $\tilde{\rho}$, we have $t\mapsto 1$, $\frac{\partial R}{\partial a} = 1-aba^{-1} \mapsto 1-r\cdot 1\cdot r^{-1}=0$, $\frac{\partial R}{\partial b} = a-[a,b] \mapsto r-1$, $\frac{\partial R}{\partial c} = [a,b](1-cdc^{-1}) \mapsto 1-s\cdot 1\cdot s^{-1}=0$, and $\frac{\partial R}{\partial d} = [a,b](c-[c,d]) \mapsto s-1$.
+In particular, the coefficients of $\sigma_R$, $\tau_a$, and $\tau_c$ vanish identically after pushing forward to $\Dic_N$, leaving $\Phi_2(\partial_3\Omega) = (r-1)E_b + (s-1)E_d$.
+Comparing coefficients of $A$ and $B$:
+\begin{align*}
+    (r-1)z - (s-1)(s+z) &= z(r-1) + s(1-z) = z(r-1) + sJ(r-1) = (z+sJ)(r-1), \\
+    (r-1)zr^{-1} + (s-1)(J-zr^{-1}) &= z - szr^{-1} + sJ - J = z - zrs + sJ - sJrs = (z+sJ)(1-rs),
+\end{align*}
+where we used $zrs = zsr^{-1} = szr^{-1}$ and $sJrs = J$. Hence
+\[
+    \Phi_2(\partial_3\Omega) = (r-1)E_b + (s-1)E_d = d_3\bigl((z+sJ)e_3\bigr).
+\]
+Thus $\Phi_3(\Omega) = (z+sJ)e_3$ (unique modulo $\operatorname{im}(d_4) = \Z\cdot(\sum_{g} g)e_3$).
+Applying the augmentation $\varepsilon\colon \Z[\Dic_N]\to\Z$ gives
+\[
+    \varepsilon(z + sJ) = 1 + N \pmod{4N}.
+\]
+Because $N$ is even, any prime $p$ dividing $4N$ divides either $2$ or $N$, hence does not divide $N+1$. Therefore $\gcd(N+1,4N)=1$, completing the proof of Theorem~\ref{thm:even-dic}. \qed
+
+\section{Proof of Theorem~\ref{thm:ADE}: Finite Subgroups of $\SU(2)$}
+
+Let $G \le \SU(2)$ be a non-trivial finite subgroup, classified as $C_n$ ($n \ge 2$), $\Dic_N$ ($N \ge 2$), $2T$ (order $24$), $2O$ (order $48$), or $2I$ (order $120$).
+For every odd prime $p \mid |G|$, a $p$-Sylow subgroup of $G$ is cyclic (since every abelian subgroup of $\SU(2)$ lies in a maximal torus $\U(1)$ and $p$-Sylows of $\SU(2)$ finite subgroups have periodic cohomology of period dividing $4$, forcing them to be cyclic for odd $p$).
+Via $M_{T_a^m}$ ($L(m,1)$), genus-$1$ data already detects the entire odd-primary part of $H^3(BG;\U(1))$.
+
+\textbf{Case 1: Cyclic $2$-Sylow subgroup ($C_n$ and $\Dic_N$ with $N$ odd).}
+Here every Sylow subgroup of $G$ is cyclic, so genus-$1$ lens-space bundles detect every primary component of $H^3(BG;\U(1))$. Hence $K_1(G)=0$ and $g_{\min}(G)=1$.
+
+\textbf{Case 2: Generalized quaternion $2$-Sylow subgroup ($P \cong \Dic_{2^k}$, $k\ge 1$, i.e., even $\Dic_N$, $2T$, $2O$, $2I$).}
+The index $[G:P]$ is odd (specifically $N/2^k$ for even $\Dic_N$, and $3, 3, 15$ for $2T, 2O, 2I$).
+\begin{enumerate}
+    \item \emph{Genus-$1$ upper bound $|K_1(G)| \le 2$}: $P$ contains a cyclic subgroup of index $2$, i.e., order $|P|/2$. Together with the odd-prime cyclic Sylow subgroups, genus-$1$ lens-space bundles detect an index-$2$ subgroup of $H^3(BG;\U(1))$, so $K_1(G) \le \{0, \alpha_{|G|/2}\}$.
+    \item \emph{Genus-$1$ lower bound $\alpha_{|G|/2} \in K_1(G)$}: Let $(M_\gamma,\tilde{\rho})$ be any genus-$1$ mapping torus with flat $G$-bundle. Pulling back along the finite covering $BP \to BG$ of odd degree $[G:P]$ yields an oriented covering $\widetilde{M} \to M_\gamma$ of total odd degree $[G:P]$ whose connected components are each closed oriented genus-$1$ mapping tori carrying flat $P$-bundles (since any finite cover of a torus bundle over $S^1$ is a torus bundle over $S^1$).
+    Because $[G:P]$ is odd, $\alpha_{|G|/2}|_P = \alpha_{|P|/2} \in H^3(BP;\U(1))$. By Proposition~\ref{prop:genus1}(2), every connected component evaluates $\alpha_{|P|/2}$ to $+1$. By multiplicativity of the evaluation under finite coverings of odd total degree, $\langle\tilde{\rho}^*\alpha_{|G|/2},[M_\gamma]\rangle^{[G:P]} = +1$, and since $\alpha_{|G|/2}$ has order $2$ and $[G:P]$ is odd, $\langle\tilde{\rho}^*\alpha_{|G|/2},[M_\gamma]\rangle = +1$.
+    Hence $K_1(G) = \{0, \alpha_{|G|/2}\} \cong \Z/2\Z$ and $g_{\min}(G) \ge 2$.
+    \item \emph{Genus-$2$ completeness $K_2(G)=0$}: Since $[G:P]$ is odd, pushing the genus-$2$ witness for $P = \Dic_{2^k}$ from Theorem~\ref{thm:even-dic} forward along $P \hookrightarrow G$ detects $\alpha_{|G|/2}$ (yielding $-1$). Moreover, any genus-$1$ witness $(M_\gamma, \tilde{\rho})$ extends to a genus-$2$ witness by attaching a trivial handle outside the support of $\gamma$ with trivial holonomy (collapsing the added handle fiberwise yields a degree-$1$ map $\Sigma_2\to T^2$ intertwining the monodromies). Thus $K_2(G) \le K_1(G)$ and $\alpha_{|G|/2}\notin K_2(G)$, whence $K_2(G)=0$ and $g_{\min}(G)=2$.
+    The same handle-attachment argument gives $K_g(G)=0$ for all $g \ge 2$. \qed
+\end{enumerate}
+
+\section{Proposition-by-Proposition Comparison with Yu (2022)}
+
+In~\cite{Yu2022} (\texttt{arXiv:2105.02231}, published as \emph{Phys.\ Rev.\ D} \textbf{105}, 106007):
+\begin{itemize}
+    \item \textbf{Proposition~1.1} (p.~106007-1) states that genus-$1$ data for $\Dic_N$ (order $4N$) has an undetectable $\Z_2$ kernel, without restricting $N$ to be even. Our Proposition~\ref{prop:genus1} shows that this holds precisely for \textbf{even $N \ge 2$}, whereas for every \textbf{odd $N \ge 3$} the kernel is trivial ($K_1(\Dic_N)=0$).
+    \item \textbf{Definition~3.2} (p.~106007-4) defines a (joint) categorical Schur detector (CSD) at a prime $p$, and \textbf{Proposition~3.3} (p.~106007-5) states that subgroups $G \le \SU(2)$ have no joint CSD. For odd $N \ge 3$, $\langle s\rangle \cong C_4$ is already a $2$-Sylow subgroup of $\Dic_N$ (hence a CSD at $p=2$), and together with $\langle r\rangle \cong C_{2N}$ the pair $\{C_4, C_{2N}\}$ has $\operatorname{lcm}(4,2N)=4N$, making it an abelian joint CSD for all of $H^3(B\Dic_N;\U(1))$.
+    \item \textbf{Proposition~3.4} (p.~106007-6) analyzes the rotation-fiber / reflection-time configuration, which indeed captures at most $2N$-th roots of unity; for odd $N$, the missing factor of $2$ is instead detected by the reflection-fiber configuration $(s,1;T_a^4,h=1)$.
+\end{itemize}
+
+\section{Dual-Path Computational Certificates and Lean~4 Formalization}
+
+To eliminate convention or sign bugs, we built two completely decoupled Python verification pipelines in the companion repository (\texttt{src/path\_a\_bar.py} and \texttt{src/path\_b\_triangulation.py}) and a standalone Lean~4.36.0 formalization (\texttt{lean/Q8Genus2Anomaly/}).
+
+\begin{table}[h]
+\centering
+\caption{Cross-verification between Path~A (algebraic bar $3$-cycles + Tomoda--Zvengrowski comparison) and Path~B (closed oriented $3$-manifold triangulations + single-bundle Dijkgraaf--Witten sums).}\label{tab:dualpath}
+\begin{tabular}{@{}r l r r r l r r@{}}
+\toprule
+$N$ & Witness & Filler & Bar terms & Tets & $H_1(M;\Z)$ & $\bmod 4N$ & Phase \\
+\midrule
+2 & Genus 2 ($Q_8$) & 114 & 18 & 6,744 & $\Z^3\oplus\Z/2\oplus\Z/6$ & $3\bmod 8$ & $-1$ \\
+3 & Genus 1 ($T_a^4$) & 16 & 3 & 2,196 & $\Z^2\oplus\Z/4$ & $3\bmod 12$ & $-1$ \\
+4 & Genus 2 ($\Dic_4$) & 120 & 20 & 8,280 & $\Z^3\oplus\Z/2\oplus\Z/10$ & $5\bmod 16$ & $-1$ \\
+6 & Genus 2 ($\Dic_6$) & 126 & 22 & 9,816 & $\Z^3\oplus\Z/2\oplus\Z/14$ & $7\bmod 24$ & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Orientation and spherical calibrations}: Both paths agree on the non-real lens space $L(4,1)$ ($1\bmod 4$, i.e., $+i$; reversed orientation $-i$), fixing relative orientation $+1$. The $48$-tetrahedron barycentric quotient $S^3/Q_8$ ($(V,E,F,T)=(10,58,96,48)$) evaluates to $1 \bmod 8$ (phase $-1$). Path~B independently constructs a second $\Z/8$ $3$-cocycle via Smith normal form over Hamilton quaternions; the test suite explicitly constructs a $2$-cochain $u$ with $W_B - W_A \equiv \delta u \pmod 8$ on all $512$ triples.
+    \item \textbf{Exhaustive $Q_8$ genus-$1$ verification}: Path~A tests all $48 \times 40 \times 8 = 15,360$ candidates in $\SL_2(\Z/4) \times \{\text{commuting pairs}\} \times Q_8$ ($1,920$ valid configurations, all yielding $+1$). Path~B builds the $\SL(2,\Z) \times Q_8$ action graph on all $40$ commuting pairs ($5$ orbits of sizes $1,3,12,12,12$, $35$ tree edges, $125$ non-tree stabilizer generator loops) and explicitly triangulates all $125$ closed mapping tori ($596,304$ tetrahedra total), yielding $+1$ on every loop.
+    \item \textbf{Lean~4.36.0 scope}: Six modules (\texttt{Group}, \texttt{Cocycle}, \texttt{Bar}, \texttt{FreeWords}, \texttt{Torus}, \texttt{Odd}) contain $89$ theorems ($43$ audited via \texttt{\#print axioms} in \texttt{Audit.lean}) with zero \texttt{sorry}, zero \texttt{Classical.choice}, and only \texttt{[propext, Quot.sound]} ($5$ theorems axiom-free). The kernel verifies general $\Dic_N$ group laws, normalized mod-$2$ cocycles, $D_N$ cycles and non-coboundary theorems, the $Q_8$ five-twist relator preservation, the Cayley-tree free filler and its $18$-term pushforward $Z_A$ ($\partial Z_A=0$, $\omega_{\mathrm{even}}(Z_A)\equiv 1\pmod 2$), exhaustive $Q_8$ finite half-difference vanishing across all $1,920$ $\SL_2(\Z/4)$ configurations (plus lift invariance), and the general odd-$N$ genus-$1$ counterexample. The topological bridges in Appendix~\ref{app:wang}, the general even-$N$ group-ring proof, Path~B triangulations, and Theorem~\ref{thm:ADE} are proved mathematically above.
+\end{itemize}
+
+\appendix
+\section{Relative Fundamental Class and the Wang--Bockstein Lemma}\label{app:wang}
+
+\begin{lemma}[Relative Fundamental Class of Mapping Tori]\label{lem:rel}
+Let $\Sigma_g^\circ = \Sigma_g \setminus D^2$ be the once-punctured surface with $\pi_1(\Sigma_g^\circ) = F_{2g}$ and boundary word $R = \prod_{r=1}^g [a_r,b_r]$.
+Let $\phi\in \Aut(F_{2g})$ satisfy $\phi(R)=R$, let $C$ be the standard normalized bar $2$-chain in $F_{2g}$ with $\partial C = -[R]$, and let $L$ be any integral bar $3$-chain in $F_{2g}$ with $\partial L = \phi(C)-C$.
+In the mapping torus $M_\phi^\circ$ of $\Sigma_g^\circ$ (whose fundamental group is $F_{2g}\rtimes_\phi\Z$), the chain $L + P_t(C)$ has boundary $[t\mid R]-[R\mid t]$ (the oriented fundamental class of $\partial M_\phi^\circ \cong T^2$).
+Since $H_3(M_\phi^\circ;\Z) = 0$, $L + P_t(C)$ uniquely represents the oriented relative fundamental class $[M_\phi^\circ, \partial M_\phi^\circ]$.
+Gluing back the solid torus $D^2 \times S^1$ kills $R$, so for any flat bundle $\tilde{\rho}\colon \pi_1(M_\phi)\to G$ with $\tilde{\rho}(t)=h$, the pushforward bar $3$-cycle $\rho_*L + P_h(\rho_*C)$ represents $\tilde{\rho}_*[M_\phi] \in H_3(BG;\Z)$.
+\end{lemma}
+
+\begin{lemma}[Wang--Bockstein Half-Difference Pairing]\label{lem:wang}
+Let $M_\phi$ be the oriented mapping torus of $\phi\in\Mod(\Sigma_g)$, and let $u,v\in H^1(M_\phi;\Z/2\Z)$.
+Let $X\in H^1(\Sigma_g;\Z)$ be any integral lift of $u|_{\Sigma_g}$, so that $\phi^*X - X$ is even.
+Then the integral Bockstein $\beta(u)\in H^2(M_\phi;\Z)$ reduces mod $2$ to $u^2$, and
+\[
+    \langle u^2 \smile v,\, [M_\phi]\rangle \equiv \left\langle \left(\frac{\phi^*X - X}{2}\bmod 2\right) \smile v|_{\Sigma_g},\; [\Sigma_g]\right\rangle \pmod 2.
+\]
+\end{lemma}
+\begin{proof}
+In the Wang exact sequence $0 \to H^1(\Sigma_g;\Z)/(\phi^*-I) \xrightarrow{\delta_W} H^2(M_\phi;\Z) \to H^2(\Sigma_g;\Z)^{\phi^*}\to 0$ (and its mod-$2$ counterpart), the map $H^1(M_\phi;\Z/2\Z) \to H^1(\Sigma_g;\Z/2\Z)^{\phi^*}$ sends $u$ to $u|_{\Sigma_g}$.
+Applying the snake lemma to multiplication by $2$ on the Wang short exact sequence for $H^*(\Sigma_g;\Z)$ identifies the Bockstein $\beta(u) \in \operatorname{im}(\delta_W) \le H^2(M_\phi;\Z)$ with $\delta_W\bigl(\tfrac{1}{2}(\phi^*X-X)\bigr)$ (modulo a multiple of $2$ coming from changing the lift $X$, which vanishes mod $2$ in the coinvariants).
+Since $\beta(u)\bmod 2 = \mathrm{Sq}^1(u) = u^2$ and $\langle \delta_W(w)\smile v, [M_\phi]\rangle = \langle w \smile v|_{\Sigma_g}, [\Sigma_g]\rangle$, the formula follows.
+\end{proof}
+
+\begin{thebibliography}{9}
+\bibitem{Yu2022}
+M.~Yu, \emph{Genus-one data and anomaly detection}, Phys.\ Rev.\ D \textbf{105} (2022), 106007, \texttt{arXiv:2105.02231}.
+
+\bibitem{TomodaZvengrowski2008}
+S.~Tomoda and P.~Zvengrowski, \emph{Remarks on the cohomology of finite fundamental groups of $3$-manifolds}, Geom.\ Topol.\ Monogr.\ \textbf{14} (2008), 519--556, \texttt{arXiv:0904.1876}.
+
+\bibitem{EpaGanter2017}
+N.~Epa and N.~Ganter, \emph{Platonic and alternating $2$-groups}, Higher Structures \textbf{1} (2017), no.~1, 122--146, \texttt{arXiv:1605.09192}.
+
+\bibitem{DijkgraafWitten1990}
+R.~Dijkgraaf and E.~Witten, \emph{Topological gauge theories and group cohomology}, Comm.\ Math.\ Phys.\ \textbf{129} (1990), 393--429.
+\end{thebibliography}
+
+\end{document}

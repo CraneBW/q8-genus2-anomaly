@@ -1,0 +1,17 @@
+# Local environments & caches
+.venv/
+.elan/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Lean build artifacts
+lean/.lake/build/
+lean/.lake/packages/
+
+# Local downloaded papers (check arXiv licenses separately; do not redistribute)
+references/
+
+# OS / editor noise
+.DS_Store
+*.swp

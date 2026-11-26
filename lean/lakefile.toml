@@ -1,0 +1,6 @@
+name = "Q8Genus2Anomaly"
+version = "0.1.0"
+defaultTargets = ["Q8Genus2Anomaly"]
+
+[[lean_lib]]
+name = "Q8Genus2Anomaly"
